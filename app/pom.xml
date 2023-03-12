@@ -116,7 +116,6 @@
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
-                <!--<version>8.0.0</version>-->
                 <version>${plugin.flyway.version}</version>
                 <configuration>
                     <ignoreMissingMigrations>true</ignoreMissingMigrations>
@@ -128,7 +127,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/exception/*</exclude>
-                        <exclude>**/CustomerApplication*</exclude>
+                        <exclude>**/*Application*</exclude>
                         <exclude>**/ServletInitializer*</exclude>
                         <exclude>**/configuration/**</exclude>
                         <exclude>**/*Config*</exclude>
@@ -150,7 +149,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/exception/*</exclude>
-                        <exclude>**/CustomerApplication*</exclude>
+                        <exclude>**/*Application*</exclude>
                         <exclude>**/ServletInitializer*</exclude>
                         <exclude>**/configuration/**</exclude>
                         <exclude>**/*Config*</exclude>
