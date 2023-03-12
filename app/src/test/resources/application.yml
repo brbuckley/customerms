@@ -19,7 +19,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: 'https://a1-liquor.us.auth0.com/'
+          issuer-uri: 'https://liquorstore.us.auth0.com/'
   web:
     resources:
       add-mappings: false
@@ -46,7 +46,6 @@ info:
     version: '1.0.0'
     artifact: 'customer-ms'
     name: 'Customer Microservice'
-    group: 'au.com.marlo.students.bbuckley.finalproject'
     time: ${maven.build.timestamp}
 
 productms:

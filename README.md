@@ -1,4 +1,4 @@
-# 7-Customer
+# CustomerMS
 
 ## Installation
 It is recommended to install the modules separately, the customer module is independent so these commands should do :
