@@ -1,0 +1,23 @@
+{
+  "request": {
+    "url": "/?ids=PRD0000001",
+    "method": "GET",
+    "headers": {
+      "Authorization": {
+        "matches": "Bearer .*"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": [{
+      "id": "PRD0000001",
+      "name": "Heineken",
+      "price": 10,
+      "category": "beer"
+    }],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

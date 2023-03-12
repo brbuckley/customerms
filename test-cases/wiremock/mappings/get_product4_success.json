@@ -1,0 +1,23 @@
+{
+  "request": {
+    "url": "/?ids=PRD0000004",
+    "method": "GET",
+    "headers": {
+      "Authorization": {
+        "matches": "Bearer .*"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": [{
+            "id": "PRD0000004",
+            "name": "Malbec",
+            "price": 9.90,
+            "category": "wine"
+    }],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

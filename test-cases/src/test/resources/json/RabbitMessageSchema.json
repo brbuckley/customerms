@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Order",
+  "description": "An Order from the message broker",
+  "type": "object",
+  "properties": {
+    "order_id": {
+      "type": "string",
+      "pattern": "^ORD[0-9]{7}$"
+    },
+    "items": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "quantity": {
+              "type": "integer"
+            },
+            "product": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^PRD[0-9]{7}$"
+                }
+              },
+              "required": [
+                "id"
+              ]
+            }
+          },
+          "required": [
+            "quantity",
+            "product"
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "order_id",
+    "items"
+  ]
+}

@@ -1,0 +1,56 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  datasource:
+    url: 'jdbc:h2:mem:test'
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 123
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: 'https://a1-liquor.us.auth0.com/'
+  web:
+    resources:
+      add-mappings: false
+
+management:
+  info:
+    env:
+      enabled: true
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: 'info, health'
+      path-mapping:
+        health: 'healthcheck'
+      base-path: '/'
+
+info:
+  build:
+    version: '1.0.0'
+    artifact: 'customer-ms'
+    name: 'Customer Microservice'
+    group: 'au.com.marlo.students.bbuckley.finalproject'
+    time: ${maven.build.timestamp}
+
+productms:
+  endpoint: 'http://localhost:8081/'
+
+auth0:
+  audience: 'https://customer-ms.com'

@@ -1,0 +1,18 @@
+{
+  "request": {
+    "url": "/?ids=PRD0000005",
+    "method": "GET",
+    "headers": {
+      "Authorization": {
+        "matches": "Bearer .*"
+      }
+    }
+  },
+  "response": {
+    "status": 404,
+    "jsonBody": {"error_code": "E_PRD_404","description": "Resource Not Found"},
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
