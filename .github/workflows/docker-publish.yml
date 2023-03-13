@@ -3,12 +3,12 @@ name: CI - Docker
 on:
   workflow_dispatch:
   push:
-    # Publish `master` as Docker `latest` image.
+    # Publish `main` as Docker `latest` image.
     branches:
-      - master
+      - main
 
 env:
-  IMAGE_NAME: smarthotelwebimage
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   
@@ -17,15 +17,12 @@ jobs:
   buildImage:
     name: Build Docker Image
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: Source/SmartHotel360.Website
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Build Container image
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME
+        run: docker build . -t $IMAGE_NAME
 
       - name: Log into GitHub Container Registry
       # TODO: Create a PAT with `read:packages` and `write:packages` scopes and save it as an Actions secret `CR_PAT`
@@ -33,7 +30,7 @@ jobs:
 
       - name: Push image to GitHub Container Registry
         run: |
-          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+          IMAGE_ID=ghcr.io/$IMAGE_NAME
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           # Strip git ref prefix from version
@@ -41,61 +38,10 @@ jobs:
           # Strip "v" prefix from tag name
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           # Use Docker `latest` tag convention
-          [ "$VERSION" == "master" ] && VERSION=latest
+          [ "$VERSION" == "main" ] && VERSION=latest
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker tag $IMAGE_NAME $IMAGE_NAME:${{ github.run_id }}
           docker push $IMAGE_ID:$VERSION
-      
-      - name: Save Image as Tar
-        run: docker save --output ${{ format('{0}/{1}.tar', github.workspace, env.IMAGE_NAME) }} $IMAGE_NAME:${{ github.run_id }}
-      
-      - name: Create a Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          # The name of the tag. This should come from the webhook payload, `github.GITHUB_REF` when a user pushes a new tag
-          tag_name: ${{ github.run_id }}
-          # The name of the release. For example, `Release v1.0.1`
-          release_name: ${{ format('{0}_{1}', env.IMAGE_NAME, github.run_id) }}
-          draft: false
-          prerelease: false
-      
-      - name: Upload a Release Asset - Docker Image
-        uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          # The URL for uploading assets to the release
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          # The path to the asset you want to upload
-          asset_path: ${{ format('{0}/{1}.tar', github.workspace, env.IMAGE_NAME) }}
-          # The name of the asset you want to upload
-          asset_name: ${{ format('{0}.tar', env.IMAGE_NAME) }}
-          # The content-type of the asset you want to upload. See the supported Media Types here: https://www.iana.org/assignments/media-types/media-types.xhtml for more information
-          asset_content_type: application/zip
-      
-      - name: Upload a Release Asset - IaC
-        uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          # The URL for uploading assets to the release
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          # The path to the asset you want to upload
-          asset_path: ${{ format('{0}/Deploy/deploymentACI.json', github.workspace) }}
-          # The name of the asset you want to upload
-          asset_name: 'deploymentACI.json'
-          # The content-type of the asset you want to upload. See the supported Media Types here: https://www.iana.org/assignments/media-types/media-types.xhtml for more information
-          asset_content_type: application/json
-
-      - name: Trigger Release in AzDO
-        uses: Azure/pipelines@v1
-        with:
-          azure-devops-project-url: 'https://dev.azure.com/dabenveg/SmartHotel360'
-          azure-pipeline-name: 'DockerCD' # name of the Azure pipeline to be triggered
-          azure-devops-token: '${{ secrets.AZURE_DEVOPS_TOKEN }}'
 
