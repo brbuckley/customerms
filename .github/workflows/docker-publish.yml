@@ -20,6 +20,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      
+      - name: Build jar
+        run: mvn -f app package
 
       - name: Build Container image
         run: docker build . -t $IMAGE_NAME
